@@ -30,3 +30,9 @@ fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以同时跑多�
 - html保存到本地，用浏览器看
 
 去接头，质控
+安装软件Trimmomatic
+
+
+
+安装软件HiC-Pro
+
