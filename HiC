@@ -9,5 +9,22 @@ conda activate syhhic
 装软件
 conda install -c bioconda XXX
 conda install -c conda-forge XXX
+conda list #看软件列表
 
 下载测序数据，参考基因组数据
+- GEO dataset
+- SRA run selector
+- SRA archive data
+wget “http：XXX”
+nohup XXX & #后台运行
+
+数据预处理
+conda install -c bioconda sra-tools
+fastq-dump --gzip --split-3 SRRXXX
+得到SRRXXX_1和SRRXXX_2.fastq.gz
+
+conda install -c fastqc
+fastqc --version #看软件版本
+fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path 
+
+去接头，质控
