@@ -14,7 +14,7 @@ conda list #看软件列表
 下载测序数据，参考基因组数据
 - GEO dataset
 - SRA run selector
-- SRA archive data
+- SRA archive data AWS
 wget “http：XXX”
 nohup XXX & #后台运行
 
@@ -26,5 +26,6 @@ fastq-dump --gzip --split-3 SRRXXX
 conda install -c fastqc
 fastqc --version #看软件版本
 fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path 
+- html保存到本地，用浏览器看
 
 去接头，质控
