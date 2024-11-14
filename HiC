@@ -9,3 +9,5 @@ conda activate syhhic
 装软件
 conda install -c bioconda XXX
 conda install -c conda-forge XXX
+
+下载测序数据，参考基因组数据
