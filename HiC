@@ -15,6 +15,7 @@ conda list #看软件列表
 - GEO dataset
 - SRA run selector
 - SRA archive data AWS
+#ftp链接可以直接复制到wget命令下载
 wget “http：XXX”
 nohup XXX & #后台运行
 
@@ -23,9 +24,9 @@ conda install -c bioconda sra-tools
 fastq-dump --gzip --split-3 SRRXXX
 得到SRRXXX_1和SRRXXX_2.fastq.gz
 
-conda install -c fastqc
+conda install -c bioconda fastqc
 fastqc --version #看软件版本
-fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path 
+fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以同时跑多个，并列写在前面
 - html保存到本地，用浏览器看
 
 去接头，质控
