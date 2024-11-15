@@ -31,8 +31,31 @@ fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以同时跑多�
 
 去接头，质控
 安装软件Trimmomatic
-
-
+wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+unzip Trimmomatic-0.39.zip
+java -jar trimmomatic-0.39.jar -h #验证安装
+去接头
+java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz 
+SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz 
+ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+得到的文件再次fastqc
 
 安装软件HiC-Pro
+wget -c https://github.com/nservant/HiC-Pro/archive/refs/tags/v3.1.0.tar.gz
+tar -zxvf v3.1.0.tar.gz
+vim environment.yml #检查一下
+conda env create -f environment.yml
+conda activate HiC-Pro_v3.1.0 #这个环境中创建时包含了全部依赖项
+vim config-install.txt #将HiC-Pro的路径写入
+make configure
+make install
+
+运行HiC-Pro
+（1）构建参考基因组索引
+bowtie2-bulid /path.fasta /output path
+bowtie2-build /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta /lustre/user/liclab/limoon/syh/genome/genome_index/
+（2）得到genome size文件
+samtools faidx reference_genome.fasta #得到索引文件.fai
+samtools idxstats reference_genome.fasta > genome_size.txt
+
 
