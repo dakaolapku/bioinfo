@@ -71,7 +71,7 @@ python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/di
     -r DpnII \
     -o digestion.bed \
     /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta
-
+（4）设置HiC-Pro配置文件
 
 
 
