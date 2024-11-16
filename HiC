@@ -20,6 +20,7 @@ wget “http：XXX”
 nohup XXX & #后台运行
 
 数据预处理
+1.fastqc
 conda install -c bioconda sra-tools
 fastq-dump --gzip --split-3 SRRXXX
 得到SRRXXX_1和SRRXXX_2.fastq.gz
@@ -29,15 +30,18 @@ fastqc --version #看软件版本
 fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以同时跑多个，并列写在前面
 - html保存到本地，用浏览器看
 
-去接头，质控
+2.去接头，质控
 安装软件Trimmomatic
 wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
 unzip Trimmomatic-0.39.zip
 java -jar trimmomatic-0.39.jar -h #验证安装
 去接头
+# 加了一些换行
 java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz 
 SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz 
 ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+# 一行写完
+java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:3
 得到的文件再次fastqc
 
 安装软件HiC-Pro
@@ -54,8 +58,20 @@ make install
 （1）构建参考基因组索引
 bowtie2-bulid /path.fasta /output path
 bowtie2-build /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta /lustre/user/liclab/limoon/syh/genome/genome_index/
-（2）得到genome size文件
+#.fasta是参考基因组
+（2）生成genome size文件
 samtools faidx reference_genome.fasta #得到索引文件.fai
-samtools idxstats reference_genome.fasta > genome_size.txt
+samtools idxstats reference_genome.fasta > genome_size.txt #这是一种方法，但实践中可能有问题
+#另一种方法，查看.fai文件，直接切掉后几列，留下前两列
+cut -f1,2 GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size.txt
+awk '$2 >= 10000' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size_filtered.txt #去除低于10kb的scaffold
+（3）生成酶切位点文件
+-文章里用的DpnII
+python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
+    -r DpnII \
+    -o digestion.bed \
+    /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta
+
+
 
 
