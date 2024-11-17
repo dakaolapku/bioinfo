@@ -36,9 +36,8 @@ wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-
 unzip Trimmomatic-0.39.zip
 java -jar trimmomatic-0.39.jar -h #验证安装
 去接头
-# 加了一些换行
-java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz 
-SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz 
+java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz \
+SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz \
 ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
 # 一行写完
 java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:3
@@ -74,5 +73,14 @@ python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/di
     /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta
 （4）设置HiC-Pro配置文件
 
+（5）运行HiC-Pro
+# -i 测序数据 -o 输出目录 -c config目录
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
+    -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout/ \
+    -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
+    > hicpro_run.log 2>&1 &
+查看运行情况
+tail -f hicpro_run.log
 
 
