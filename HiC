@@ -61,10 +61,11 @@ nohup bowtie2-build --threads 20 /lustre/user/liclab/limoon/syh/dataori/GSE26805
 得到6个文件，形如GSE268050_MamPri_Loxafr3.0_assisted_HiC_index.1.bt2
 （2）生成genome size文件
 samtools faidx reference_genome.fasta #得到索引文件.fai
-samtools idxstats reference_genome.fasta > genome_size.txt #这是一种方法，但实践中可能有问题
+samtools idxstats reference_genome.fasta > genome_size.txt #这是一种方法，但实践中有问题
 #另一种方法，查看.fai文件，直接切掉后几列，留下前两列
 cut -f1,2 GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size.txt
-awk '$2 >= 10000' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size_filtered.txt #去除低于10kb的scaffold
+awk '$2 >= 10000' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size_filtered.txt #去除低于10kb的scaffold #第一次尝试
+grep '^chr' /lustre/user/liclab/limoon/syh/dataori/genome_size.txt > /lustre/user/liclab/limoon/syh/dataori/genome_size_chr.txt #只保留chr，不要scaffold #第二次尝试
 （3）生成酶切位点文件
 -文章里用的DpnII
 python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
@@ -74,13 +75,23 @@ python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/di
 （4）设置HiC-Pro配置文件
 
 （5）运行HiC-Pro
+conda activate HiC-Pro_v3.1.0
 # -i 测序数据 -o 输出目录 -c config目录
 nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
-    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout2/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     > hicpro_run.log 2>&1 &
 查看运行情况
 tail -f hicpro_run.log
+
+转换成.hic文件
+安装juicer tools
+# -p .genome文件 -s .genome.chrom.sizes文件，路径和前缀要相同
+java -jar juicer_tools_1.19.02.jar pre -r 10000 \
+-p /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome \
+-s /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome.chrom.sizes \
+/lustre/user/liclab/limoon/syh/software/hicpro/hicout/hic_results/data/SRR28885082/cleaned_SRR28885082.allValidPairs \
+/lustre/user/liclab/limoon/syh/software/juice/output/output10000.hic
 
 
