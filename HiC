@@ -88,10 +88,29 @@ tail -f hicpro_run.log
 转换成.hic文件
 安装juicer tools
 # -p .genome文件 -s .genome.chrom.sizes文件，路径和前缀要相同
-java -jar juicer_tools_1.19.02.jar pre -r 10000 \
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
 -p /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome \
 -s /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome.chrom.sizes \
-/lustre/user/liclab/limoon/syh/software/hicpro/hicout/hic_results/data/SRR28885082/cleaned_SRR28885082.allValidPairs \
+/lustre/user/liclab/limoon/syh/software/hicpro/hicout2/hic_results/data/SRR28885082/SRR28885082.allValidPairs \
 /lustre/user/liclab/limoon/syh/software/juice/output/output10000.hic
 
 
+
+尝试删去参考基因组中的scaffold
+awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta > /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta
+
+nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/MamPri_Loxafr3.0_assisted_HiC_chr/MamPri_Loxafr3.0_assisted_HiC_chr_index > bowtie2_build.log 2>&1 &
+
+cut -f1,2 MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size.txt
+
+python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
+    -r DpnII \
+    -o digestion.bed \
+    /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC.fasta
+
+
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
+    -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout3/ \
+    -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
+    > hicpro_run.log 2>&1 &
