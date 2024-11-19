@@ -140,11 +140,11 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
 cut -f 1,2 Loxafr3.0_HiC_chr.fasta.fai > reference.genome
 cp reference.genome reference.genome.chrom.sizes
 
-
+# 这个能跑
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
 -s /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
--p Loxafr3.0_HiC_chr \
 /lustre/user/liclab/limoon/syh/software/juice/output/SRR28885082/SRR28885082.allValidPairs \
-/lustre/user/liclab/limoon/syh/software/juice/output/output_10000.hic 
+/lustre/user/liclab/limoon/syh/software/juice/output/output_10000.hic \
+/lustre/user/liclab/limoon/syh/loxa/reference.genome
 
 
