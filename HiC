@@ -87,16 +87,17 @@ tail -f hicpro_run.log
 
 转换成.hic文件
 安装juicer tools
+####################################################################################### 这部分有问题
 # -p .genome文件 -s .genome.chrom.sizes文件，路径和前缀要相同
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
 -p /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome \
 -s /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome.chrom.sizes \
 /lustre/user/liclab/limoon/syh/software/hicpro/hicout2/hic_results/data/SRR28885082/SRR28885082.allValidPairs \
 /lustre/user/liclab/limoon/syh/software/juice/output/output10000.hic
+###########################################################################################
 
 
-
-尝试删去参考基因组中的scaffold
+尝试删去参考基因组中的scaffold #hicout3
 awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta > /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta
 
 nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/MamPri_Loxafr3.0_assisted_HiC_chr/MamPri_Loxafr3.0_assisted_HiC_chr_index > bowtie2_build.log 2>&1 &
@@ -115,7 +116,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
 
-参考基因组：GSE268050_Loxafr3.0_HiC.fasta
+参考基因组：GSE268050_Loxafr3.0_HiC.fasta #hicout4
 awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_Loxafr3.0_HiC.fasta > /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
 
 nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/Loxafr3.0_HiC_index/Loxafr3.0_HiC_index > bowtie2_build.log 2>&1 &
@@ -134,3 +135,16 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout4/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
+
+生成.genome 和 .chrom.sizes文件
+cut -f 1,2 Loxafr3.0_HiC_chr.fasta.fai > reference.genome
+cp reference.genome reference.genome.chrom.sizes
+
+
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
+-s /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
+-p Loxafr3.0_HiC_chr \
+/lustre/user/liclab/limoon/syh/software/juice/output/SRR28885082/SRR28885082.allValidPairs \
+/lustre/user/liclab/limoon/syh/software/juice/output/output_10000.hic 
+
+
