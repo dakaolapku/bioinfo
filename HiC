@@ -81,7 +81,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout2/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
-    > hicpro_run.log 2>&1 &
+    hicpro_run.log 2>&1 &
 查看运行情况
 tail -f hicpro_run.log
 
@@ -113,4 +113,4 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout3/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
-    > hicpro_run.log 2>&1 &
+    hicpro_run.log 2>&1 &
