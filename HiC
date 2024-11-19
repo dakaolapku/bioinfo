@@ -114,3 +114,23 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout3/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
+
+参考基因组：GSE268050_Loxafr3.0_HiC.fasta
+awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_Loxafr3.0_HiC.fasta > /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
+
+nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/Loxafr3.0_HiC_index/Loxafr3.0_HiC_index > bowtie2_build.log 2>&1 &
+
+samtools faidx Loxafr3.0_HiC_chr.fasta
+
+cut -f1,2 Loxafr3.0_HiC_chr.fasta.fai > genome_size.txt
+
+python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
+    -r DpnII \
+    -o digestion.bed \
+    /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
+
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
+    -i /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout4/ \
+    -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
+    hicpro_run.log 2>&1 &
