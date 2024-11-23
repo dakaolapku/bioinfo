@@ -147,4 +147,36 @@ java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar
 /lustre/user/liclab/limoon/syh/software/juice/output/output_10000.hic \
 /lustre/user/liclab/limoon/syh/loxa/reference.genome
 
+###################################################
+用juicer
+##################################################
+
+nohup /lustre/user/liclab/limoon/syh/software/juicernew/juicer/CPU/juicer.sh \
+      -d /lustre/user/liclab/limoon/syh/hic_project \
+      -s none \
+      -z /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta \
+      -p /lustre/user/liclab/limoon/syh/loxa/reference.genome.chrom.sizes \
+      -y none \
+      -t 30 \
+      -1 /lustre/user/liclab/limoon/syh/hic_project/fastq/SRR28885082_R1.fq.gz \
+      -2 /lustre/user/liclab/limoon/syh/hic_project/fastq/SRR28885082_R2.fq.gz \
+      > /lustre/user/liclab/limoon/syh/hic_project/juicer_run.log 2>&1 &
+到.bam断了，手动跑
+
+samtools sort -n -@ 26 /lustre/user/liclab/limoon/syh/hic_project/fastq/SRR28885082.bam \
+-o /lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_queryname_sorted.bam
+
+samtools fixmate -m -@ 26 /lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_queryname_sorted.bam \
+/lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_fixmate.bam
+
+samtools sort -@ 26 /lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_fixmate.bam \
+-o /lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_fixmate_sorted.bam
+
+samtools markdup -@ 26 /lustre/user/liclab/limoon/syh/hic_project/splits/SRR28885082_fixmate_sorted.bam \
+/lustre/user/liclab/limoon/syh/hic_project/aligned/SRR28885082_dedup.bam
+
+nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pre \
+    /lustre/user/liclab/limoon/syh/hic_project/aligned/SRR28885082_dedup.bam \
+    /lustre/user/liclab/limoon/syh/hic_project/results/SRR28885082_output.hic \
+    /lustre/user/liclab/limoon/syh/loxa/reference.genome.chrom.sizes > /lustre/user/liclab/limoon/syh/hic_project/juicer_run.log 2>&1 &
 
