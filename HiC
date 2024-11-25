@@ -206,7 +206,17 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.
 -s /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
 /lustre/user/liclab/limoon/syh/software/juice/output/SRR25023864/SRR25023864.allValidPairs \
 /lustre/user/liclab/limoon/syh/software/juice/output/SRR25023864/SRR25023864.hic \
-/lustre/user/liclab/limoon/syh/loxa/reference.genome &
+/lustre/user/liclab/limoon/syh/loxa/reference.genome \
+> juice_run.log 2>&1 &
+no reads
+
+
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hicpro2juicebox.sh \
+-i /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/hic_results/data/SRR25023864/SRR25023864.allValidPairs \
+-g /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
+-j /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar \
+-o /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/ \
+> hicpro2juice_run.log 2>&1 &
 ##################################################
 Pearson作图
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearsons -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
