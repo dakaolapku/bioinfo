@@ -180,3 +180,11 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.
     /lustre/user/liclab/limoon/syh/hic_project/results/SRR28885082_output.hic \
     /lustre/user/liclab/limoon/syh/loxa/reference.genome.chrom.sizes > /lustre/user/liclab/limoon/syh/hic_project/juicer_run.log 2>&1 &
 
+亚洲象
+
+python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
+    -r Csp6I,MseI \
+    -o digestion1.bed \
+   /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
+
+
