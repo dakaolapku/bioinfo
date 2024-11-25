@@ -87,6 +87,9 @@ tail -f hicpro_run.log
 
 转换成.hic文件
 安装juicer tools
+生成.genome 和 .chrom.sizes文件
+cut -f 1,2 Loxafr3.0_HiC_chr.fasta.fai > reference.genome
+cp reference.genome reference.genome.chrom.sizes
 ####################################################################################### 这部分有问题
 # -p .genome文件 -s .genome.chrom.sizes文件，路径和前缀要相同
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
@@ -116,7 +119,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
 
-参考基因组：GSE268050_Loxafr3.0_HiC.fasta #hicout4
+尝试参考基因组：GSE268050_Loxafr3.0_HiC.fasta #hicout4
 awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_Loxafr3.0_HiC.fasta > /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
 
 nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/Loxafr3.0_HiC_index/Loxafr3.0_HiC_index > bowtie2_build.log 2>&1 &
@@ -135,10 +138,8 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout4/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
+#############################################################################################
 
-生成.genome 和 .chrom.sizes文件
-cut -f 1,2 Loxafr3.0_HiC_chr.fasta.fai > reference.genome
-cp reference.genome reference.genome.chrom.sizes
 
 # 这个能跑
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
@@ -147,6 +148,7 @@ java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar
 /lustre/user/liclab/limoon/syh/software/juice/output/output_10000.hic \
 /lustre/user/liclab/limoon/syh/loxa/reference.genome
 
+no reads
 ###################################################
 用juicer
 ##################################################
@@ -179,18 +181,34 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.
     /lustre/user/liclab/limoon/syh/hic_project/aligned/SRR28885082_dedup.bam \
     /lustre/user/liclab/limoon/syh/hic_project/results/SRR28885082_output.hic \
     /lustre/user/liclab/limoon/syh/loxa/reference.genome.chrom.sizes > /lustre/user/liclab/limoon/syh/hic_project/juicer_run.log 2>&1 &
-
+no reads
+################################################################################################3
 亚洲象
+nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 30 /lustre/user/liclab/limoon/syh/asian/SRR25023864_1.fastq.gz /lustre/user/liclab/limoon/syh/asian/SRR25023864_2.fastq.gz \
+SRR25023864_forward_paired.fq.gz SRR25023864_forward_unpaired.fq.gz SRR25023864_reverse_paired.fq.gz SRR25023864_reverse_unpaired.fq.gz \
+HEADCROP:8 &
+
+nohup fastqc SRR25023864_forward_paired.fq.gz SRR25023864_reverse_paired.fq.gz -o /lustre/user/liclab/limoon/syh/fastqcout/ &
+
 
 python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
-    -r Csp6I,MseI \
+    -r "A^CGT","T^TAA" \
     -o digestion1.bed \
    /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
 
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
+    -i /lustre/user/liclab/limoon/syh/asian/data/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/ \
+    -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
+    hicpro_run.log 2>&1 &
+
+##################################################
+Pearson作图
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearsons -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
 
 
-
-java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearson -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
-
-java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar dump observed NONE /lustre/user/liclab/limoon/syh/loxa/reference.genome /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic matrix /lustre/user/liclab/limoon/syh/data_GEO/EM_skin_Loxafr3.0_HiC_matrix.txt
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar dump observed NONE \
+    /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic \
+    chr18 BP \
+   /lustre/user/liclab/limoon/syh/data_GEO/EM_skin_Loxafr3.0_HiC_matrix.txt
 
