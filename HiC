@@ -188,3 +188,9 @@ python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/di
    /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
 
 
+
+
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearson -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
+
+java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar dump observed NONE /lustre/user/liclab/limoon/syh/loxa/reference.genome /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic matrix /lustre/user/liclab/limoon/syh/data_GEO/EM_skin_Loxafr3.0_HiC_matrix.txt
+
