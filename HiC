@@ -77,6 +77,9 @@ python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/di
     /lustre/user/liclab/limoon/syh/dataori/GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta
 （4）设置HiC-Pro配置文件
 
+
+把trim后的连个paired文件改名_R1和_R2,来和config中对应，并单独放在SRRXXX文件夹
+酶切位点要写2重复，如GATCGATC
 （5）运行HiC-Pro
 conda activate HiC-Pro_v3.1.0
 # -i 测序数据 -o 输出目录 -c config目录
@@ -93,7 +96,9 @@ tail -f hicpro_run.log
 生成.genome 和 .chrom.sizes文件
 cut -f 1,2 Loxafr3.0_HiC_chr.fasta.fai > reference.genome
 cp reference.genome reference.genome.chrom.sizes
-####################################################################################### 这部分有问题
+####################################################
+暂时无法用juicer tools转换
+####################################################################################### 
 # -p .genome文件 -s .genome.chrom.sizes文件，路径和前缀要相同
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
 -p /lustre/user/liclab/limoon/syh/dataori/reference_filtered.genome \
@@ -103,7 +108,7 @@ java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar
 ###########################################################################################
 
 
-尝试删去参考基因组中的scaffold #hicout3
+尝试删去参考基因组中的scaffold #hicout3 #的确需要删去scaffold
 awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta > /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta
 
 nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/generef/MamPri_Loxafr3.0_assisted_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/MamPri_Loxafr3.0_assisted_HiC_chr/MamPri_Loxafr3.0_assisted_HiC_chr_index > bowtie2_build.log 2>&1 &
@@ -122,7 +127,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
 
-尝试参考基因组：GSE268050_Loxafr3.0_HiC.fasta #hicout4
+尝试参考基因组：GSE268050_Loxafr3.0_HiC.fasta #hicout4 
 awk '/^>/ {p=!($0 ~ /scaffold/)} p' GSE268050_Loxafr3.0_HiC.fasta > /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta
 
 nohup bowtie2-build --threads 25 /lustre/user/liclab/limoon/syh/loxa/Loxafr3.0_HiC_chr.fasta /lustre/user/liclab/limoon/syh/genome/Loxafr3.0_HiC_index/Loxafr3.0_HiC_index > bowtie2_build.log 2>&1 &
@@ -143,8 +148,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     hicpro_run.log 2>&1 &
 #############################################################################################
 
-
-# 这个能跑
+# 命令正确的版本
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 10000 \
 -s /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
 /lustre/user/liclab/limoon/syh/software/juice/output/SRR28885082/SRR28885082.allValidPairs \
@@ -185,8 +189,11 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.
     /lustre/user/liclab/limoon/syh/hic_project/results/SRR28885082_output.hic \
     /lustre/user/liclab/limoon/syh/loxa/reference.genome.chrom.sizes > /lustre/user/liclab/limoon/syh/hic_project/juicer_run.log 2>&1 &
 no reads
-################################################################################################3
-亚洲象 hicout5
+################################################################################################
+
+
+
+亚洲象 #hicout5
 nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -threads 30 /lustre/user/liclab/limoon/syh/asian/SRR25023864_1.fastq.gz /lustre/user/liclab/limoon/syh/asian/SRR25023864_2.fastq.gz \
 SRR25023864_forward_paired.fq.gz SRR25023864_forward_unpaired.fq.gz SRR25023864_reverse_paired.fq.gz SRR25023864_reverse_unpaired.fq.gz \
 HEADCROP:8 &
@@ -204,7 +211,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
-
+####################################################################################
 nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar pre -r 1000000 \
 -s /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
 /lustre/user/liclab/limoon/syh/software/juice/output/SRR25023864/SRR25023864.allValidPairs \
@@ -212,7 +219,7 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.
 /lustre/user/liclab/limoon/syh/loxa/reference.genome \
 > juice_run.log 2>&1 &
 no reads
-
+######################################################################################
 换一个工具：hicpro2juicebox
 nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hicpro2juicebox.sh \
 -i /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/hic_results/data/SRR25023864/SRR25023864.allValidPairs \
@@ -227,17 +234,21 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmom
 SRR28885083_forward_paired.fq.gz SRR28885083_forward_unpaired.fq.gz SRR28885083_reverse_paired.fq.gz SRR28885083_reverse_unpaired.fq.gz \
 HEADCROP:8 &
 
-
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
+    -i /lustre/user/liclab/limoon/syh/mp505/data/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout6/ \
+    -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
+    hicpro_run.log 2>&1 &
 
 
 
 
 ##################################################
-loop
-nohup java -Xmx212g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar apa \
--k KR -r 50000 -c chr1 \
+寻找loop #java特别占内存，.hic是二进制文件，不能split循环跑
+nohup java -Xmx256g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar apa \
+-k KR -r 10000 -c chr1 \
 -n 5 -x 1000 -w 50000 \
-/lustre/user/liclab/limoon/syh/software/hicpro/hicout5/SRR25023864.allValidPairs.hic \
+/lustre/user/liclab/limoon/syh/software/hicpro/hicout5/apa/SRR25023864.allValidPairs.hic \
 /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_LA_HiCCUPS_loops_Loxafr3.0_HiC.bedpe.gz \
 /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/apa/ \
 > apa_run.log 2>&1 &
@@ -247,7 +258,7 @@ nohup java -Xmx212g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_to
 
 
 
-
+##################################################################
 
 Pearson作图
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearsons -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
