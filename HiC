@@ -246,13 +246,12 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
 ##################################################
 寻找loop #java特别占内存，.hic是二进制文件，不能split循环跑
 nohup java -Xmx256g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar apa \
--k KR -r 10000 -c chr1 \
+-k KR -r 25000 -c chr1 \
 -n 5 -x 1000 -w 50000 \
 /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/apa/SRR25023864.allValidPairs.hic \
 /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_LA_HiCCUPS_loops_Loxafr3.0_HiC.bedpe.gz \
 /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/apa/ \
 > apa_run.log 2>&1 &
-
 
 
 
