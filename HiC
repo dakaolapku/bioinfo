@@ -24,6 +24,9 @@ nohup XXX & #后台运行
 conda install -c bioconda sra-tools
 fastq-dump --gzip --split-3 SRRXXX
 得到SRRXXX_1和SRRXXX_2.fastq.gz
+更快的工具：
+fasterq-dump --split-3 --threads 25 SRRXXX
+
 
 conda install -c bioconda fastqc
 fastqc --version #看软件版本
@@ -210,14 +213,42 @@ nohup java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.
 > juice_run.log 2>&1 &
 no reads
 
-
+换一个工具：hicpro2juicebox
 nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hicpro2juicebox.sh \
 -i /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/hic_results/data/SRR25023864/SRR25023864.allValidPairs \
 -g /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
 -j /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar \
 -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout5/ \
 > hicpro2juice_run.log 2>&1 &
+成功得到.hic，用juicebox可视化
 ##################################################
+猛犸象sample505
+nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -threads 30 /lustre/user/liclab/limoon/syh/mp505/SRR28885083_1.fastq.gz /lustre/user/liclab/limoon/syh/mp505/SRR28885083_2.fastq.gz \
+SRR28885083_forward_paired.fq.gz SRR28885083_forward_unpaired.fq.gz SRR28885083_reverse_paired.fq.gz SRR28885083_reverse_unpaired.fq.gz \
+HEADCROP:8 &
+
+
+
+
+
+
+##################################################
+loop
+nohup java -Xmx212g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar apa \
+-k KR -r 50000 -c chr1 \
+-n 5 -x 1000 -w 50000 \
+/lustre/user/liclab/limoon/syh/software/hicpro/hicout5/SRR25023864.allValidPairs.hic \
+/lustre/user/liclab/limoon/syh/data_GEO/GSE268050_LA_HiCCUPS_loops_Loxafr3.0_HiC.bedpe.gz \
+/lustre/user/liclab/limoon/syh/software/hicpro/hicout5/apa/ \
+> apa_run.log 2>&1 &
+
+
+
+
+
+
+
+
 Pearson作图
 java -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.22.01.jar pearsons -p 1 -r 1000000 -d /lustre/user/liclab/limoon/syh/data_GEO/ /lustre/user/liclab/limoon/syh/data_GEO/GSE268050_EM_skin_Loxafr3.0_HiC.hic
 
