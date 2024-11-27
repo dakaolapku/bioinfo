@@ -252,6 +252,29 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout7/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
+
+nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hicpro2juicebox.sh \
+-i /lustre/user/liclab/limoon/syh/software/hicpro/hicout7/hic_results/data/SRR28885083/SRR28885083.allValidPairs \
+-g /lustre/user/liclab/limoon/syh/software/juice/output/reference.genome.chrom.sizes \
+-j /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar \
+-o /lustre/user/liclab/limoon/syh/software/hicpro/hicout7/ \
+> hicpro2juice_run.log 2>&1 &
+问题：矩阵过于稀疏，可能是测序深度不够
+##################################################################
+猛犸象sample504
+nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -threads 80 /lustre/user/liclab/limoon/syh/mp504/SRR28885061_1.fastq.gz /lustre/user/liclab/limoon/syh/mp504/SRR28885061_2.fastq.gz \
+SRR28885061_forward_paired.fq.gz SRR28885061_forward_unpaired.fq.gz SRR28885061_reverse_paired.fq.gz SRR28885061_reverse_unpaired.fq.gz \
+HEADCROP:8 &
+
+
+
+
+
+
+
+
+
+
 ##################################################
 寻找loop #java特别占内存，.hic是二进制文件，不能split循环跑
 nohup java -Xmx256g -jar /lustre/user/liclab/limoon/syh/software/juice/juicer_tools_1.19.02.jar apa \
