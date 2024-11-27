@@ -232,7 +232,7 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hic
 猛犸象sample505
 nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -threads 30 /lustre/user/liclab/limoon/syh/mp505/SRR28885083_1.fastq.gz /lustre/user/liclab/limoon/syh/mp505/SRR28885083_2.fastq.gz \
 SRR28885083_forward_paired.fq.gz SRR28885083_forward_unpaired.fq.gz SRR28885083_reverse_paired.fq.gz SRR28885083_reverse_unpaired.fq.gz \
-HEADCROP:8 &
+HEADCROP:7 &
 
 nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -i /lustre/user/liclab/limoon/syh/mp505/data/ \
@@ -262,10 +262,10 @@ nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/hic
 问题：矩阵过于稀疏，可能是测序深度不够
 ##################################################################
 猛犸象sample504
-nohup java -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -threads 80 /lustre/user/liclab/limoon/syh/mp504/SRR28885061_1.fastq.gz /lustre/user/liclab/limoon/syh/mp504/SRR28885061_2.fastq.gz \
+nohup java -Xmx128g -jar /lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 -threads 80 /lustre/user/liclab/limoon/syh/mp504/SRR28885061_1.fastq.gz /lustre/user/liclab/limoon/syh/mp504/SRR28885061_2.fastq.gz \
 SRR28885061_forward_paired.fq.gz SRR28885061_forward_unpaired.fq.gz SRR28885061_reverse_paired.fq.gz SRR28885061_reverse_unpaired.fq.gz \
-HEADCROP:8 &
-
+ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8  \
+&& pigz -p 64 SRR28885061_forward_paired.fq.gz SRR28885061_forward_unpaired.fq.gz SRR28885061_reverse_paired.fq.gz SRR28885061_reverse_unpaired.fq.gz &
 
 
 
