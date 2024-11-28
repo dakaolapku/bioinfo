@@ -267,9 +267,16 @@ SRR28885061_forward_paired.fq.gz SRR28885061_forward_unpaired.fq.gz SRR28885061_
 ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8  \
 && pigz -p 64 SRR28885061_forward_paired.fq.gz SRR28885061_forward_unpaired.fq.gz SRR28885061_reverse_paired.fq.gz SRR28885061_reverse_unpaired.fq.gz &
 
+
+############
+hicout8 ：无酶切位点 ligation site
+失败
+################
+hicout9 ： 加酶切位点 ligation site
+
 nohup /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/HiC-Pro \
     -i /lustre/user/liclab/limoon/syh/mp504/data/ \
-    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout8/ \
+    -o /lustre/user/liclab/limoon/syh/software/hicpro/hicout9/ \
     -c /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/config-hicpro.txt \
     hicpro_run.log 2>&1 &
 
