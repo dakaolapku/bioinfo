@@ -39,12 +39,14 @@ wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-
 unzip Trimmomatic-0.39.zip
 java -jar trimmomatic-0.39.jar -h #验证安装
 去接头
+2个输入，4个输出，结果要paired
+ILLUMINACLIP：去接头，指向自带的adapters文件夹
+HEADCROP：切掉前几个bp
 java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz \
 SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz \
 ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
-# 一行写完
-java -jar trimmomatic-0.39.jar PE /lustre/user/liclab/limoon/syh/dataori/SRR28885082_1.fastq.gz /lustre/user/liclab/limoon/syh/dataori/SRR28885082_2.fastq.gz SRR28885082_forward_paired.fq.gz SRR28885082_forward_unpaired.fq.gz SRR28885082_reverse_paired.fq.gz SRR28885082_reverse_unpaired.fq.gz ILLUMINACLIP:/lustre/user/liclab/limoon/syh/software/Trimmomatic-0.39/adapters/TruSeq3-PE.fa:2:30:10 HEADCROP:8 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:3
-得到的文件再次fastqc
+
+3.得到的文件再次fastqc
 
 安装软件HiC-Pro
 wget -c https://github.com/nservant/HiC-Pro/archive/refs/tags/v3.1.0.tar.gz
@@ -68,7 +70,7 @@ samtools idxstats reference_genome.fasta > genome_size.txt #这是一种方法�
 #另一种方法，查看.fai文件，直接切掉后几列，留下前两列
 cut -f1,2 GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size.txt
 awk '$2 >= 10000' GSE268050_MamPri_Loxafr3.0_assisted_HiC.fasta.fai > genome_size_filtered.txt #去除低于10kb的scaffold #第一次尝试
-grep '^chr' /lustre/user/liclab/limoon/syh/dataori/genome_size.txt > /lustre/user/liclab/limoon/syh/dataori/genome_size_chr.txt #只保留chr，不要scaffold #第二次尝试
+grep '^chr' /lustre/user/liclab/limoon/syh/dataori/genome_size.txt > /lustre/user/liclab/limoon/syh/dataori/genome_size_chr.txt #只保留chr，不要scaffold #第二次尝试，认为这种方法更合适
 （3）生成酶切位点文件
 -文章里用的DpnII
 python /lustre/user/liclab/limoon/syh/software/hicpro/HiC-Pro-3.1.0/bin/utils/digest_genome.py \
