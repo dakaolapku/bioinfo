@@ -18,6 +18,7 @@ conda list #看软件列表
 #ftp链接可以直接复制到wget命令下载
 wget “http：XXX”
 nohup XXX & #后台运行
+# EBI上可以下载双端测序数据，直接是fastq格式，不需要split
 
 数据预处理
 1.fastqc
@@ -27,10 +28,9 @@ fastq-dump --gzip --split-3 SRRXXX
 更快的工具：
 fasterq-dump --split-3 --threads 25 SRRXXX
 
-
 conda install -c bioconda fastqc
 fastqc --version #看软件版本
-fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以同时跑多个，并列写在前面
+fastqc SRRXXX_1.fastq.gz SRRXXX_2.fastq.gz -o /output path #可以跑多个，并列写在前面，但会依次跑，不如开多个线程，这样更快
 - html保存到本地，用浏览器看
 
 2.去接头，质控
