@@ -1,0 +1,25 @@
+
+
+#序列转换成.fasta，作为参考基因组
+echo ">sequence_name" > mutation.fasta
+cat mutation.txt >> mutation.fasta #原始纯序列文件
+
+比对
+bowtie2-build /DATA2/syh/rawdata/mutation.fasta /DATA2/syh/reference/mutation_index
+
+nohup bowtie2 -x /DATA2/syh/reference/mutation_index \
+        -1 /DATA2/syh/rawdata/m5-library-1/m5-library-1_R1.fq.gz \
+        -2 /DATA2/syh/rawdata/m5-library-1/m5-library-1_R2.fq.gz \
+        -S /DATA2/syh/output/m5-library-1/m5-library-1_aligned.sam \
+        -p 16 &
+
+nohup samtools view -bS /DATA2/syh/output/m5-library-1/m5-library-1_aligned.sam > /DATA2/syh/output/m5-library-1/m5-library-1_aligned.bam &
+#排序
+samtools sort /DATA2/syh/output/m5-library-1/m5-library-1_aligned.bam -o /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
+#索引
+samtools index /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
+#比对统计信息
+samtools flagstat /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
+
+nohup samtools mpileup -Ou -f /DATA2/syh/rawdata/mutation.fasta /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam \
+| bcftools call -mv -Ov -o /DATA2/syh/output/m5-library-1/m5-library-1_variants.vcf &
