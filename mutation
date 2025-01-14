@@ -37,10 +37,6 @@ nano /DATA2/syh/software/SnpEff/snpEff/snpEff.config
 
 
 
-nohup java -jar /DATA2/syh/software/SnpEff/snpEff/snpEff.jar ann /DATA2/syh/rawdata/mutation.fasta \
-/DATA2/syh/output/m5-library-1/temp.vcf > /DATA2/syh/output/m5-library-1/m5-library-1_annotated_variants.vcf \
-2> /DATA2/syh/output/m5-library-1/m5-library-1_error.log &
-
 nohup java -jar /DATA2/syh/software/SnpEff/snpEff/snpEff.jar ann -v /DATA2/syh/rawdata/mutation.fasta \
 /DATA2/syh/output/m5-library-1/temp.vcf > /DATA2/syh/output/m5-library-1/m5-library-1_annotated_variants.vcf \
 2> /DATA2/syh/output/m5-library-1/m5-library-1_error.log &
