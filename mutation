@@ -21,6 +21,7 @@ samtools index /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
 #比对统计信息
 samtools flagstat /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
 
+尝试1
 #检测突变 生成vcf文件
 nohup samtools mpileup -f /DATA2/syh/rawdata/mutation.fasta /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam -v -o /DATA2/syh/output/m5-library-1/temp.vcf &
 
@@ -28,6 +29,19 @@ bcftools view /DATA2/syh/output/m5-library-1/temp.vcf
 
 #java
 conda install -c conda-forge openjdk=21
+
+尝试2
+#用bedtools标记感兴趣区域
+vi regions.bed
+seq1    81    120
+
+bedtools getfasta -fi /DATA2/syh/rawdata/mutation.fasta -bed /DATA2/syh/output/m5-library-1/regions.bed \
+-ibam /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam \
+> m5-library-1_sorted.fasta 
+
+
+
+
 
 #使用snpEff注释变异
 nohup java -jar /DATA2/syh/software/SnpEff/snpEff/snpEff.jar ann /DATA2/syh/rawdata/mutation.fasta \
