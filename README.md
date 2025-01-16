@@ -1,1 +1,1 @@
-A rotation notebook
+A notebook of bioinfo studying and projects
