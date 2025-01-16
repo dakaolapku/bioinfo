@@ -21,6 +21,7 @@ samtools index /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
 #比对统计信息
 samtools flagstat /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
 
+#########################################################
 尝试1
 #检测突变 生成vcf文件
 nohup samtools mpileup -f /DATA2/syh/rawdata/mutation.fasta /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam -v -o /DATA2/syh/output/m5-library-1/temp.vcf &
@@ -30,29 +31,29 @@ bcftools view /DATA2/syh/output/m5-library-1/temp.vcf
 #java
 conda install -c conda-forge openjdk=21
 
-尝试2
-#用bedtools标记感兴趣区域
-vi regions.bed
-seq1    81    120
-
-bedtools getfasta -fi /DATA2/syh/rawdata/mutation.fasta -bed /DATA2/syh/output/m5-library-1/regions.bed \
--ibam /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam \
-> m5-library-1_sorted.fasta 
-
-
-
-
-
 #使用snpEff注释变异
 nohup java -jar /DATA2/syh/software/SnpEff/snpEff/snpEff.jar ann /DATA2/syh/rawdata/mutation.fasta \
 /DATA2/syh/output/m5-library-1/temp.vcf > /DATA2/syh/output/m5-library-1/m5-library-1_annotated_variants.vcf &
 
 nano /DATA2/syh/software/SnpEff/snpEff/snpEff.config
 
+不是想要的信息
+#########################################################
+尝试2
+#用bedtools标记感兴趣区域
+samtools view /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam | head -n 10
+看到bam文件中序列名称sequence_name
+vi regions.bed
+sequence_name    81    120 #用TAB而不是空格分隔
+
+#提取bam和bed的重叠区域
+bedtools intersect -a /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam \
+-b /DATA2/syh/output/m5-library-1/regions.bed > /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam
+
+samtools index /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam
 
 
-nohup java -jar /DATA2/syh/software/SnpEff/snpEff/snpEff.jar ann -v /DATA2/syh/rawdata/mutation.fasta \
-/DATA2/syh/output/m5-library-1/temp.vcf > /DATA2/syh/output/m5-library-1/m5-library-1_annotated_variants.vcf \
-2> /DATA2/syh/output/m5-library-1/m5-library-1_error.log &
+
+
 
 
