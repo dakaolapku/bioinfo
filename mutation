@@ -41,7 +41,7 @@ nano /DATA2/syh/software/SnpEff/snpEff/snpEff.config
 #########################################################
 尝试2
 #用bedtools标记感兴趣区域
-samtools view /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam | head -n 10
+samtools view /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam | head -n 10
 看到bam文件中序列名称sequence_name
 vi regions.bed
 sequence_name    81    120 #用TAB而不是空格分隔
@@ -52,8 +52,10 @@ bedtools intersect -a /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam \
 
 samtools index /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam
 
+#########################################################
+#提取81-120bp区域
+nohup samtools view -h /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam sequence_name:81-120 > extracted_reads.sam &
 
+nohup samtools view -Sb extracted_reads.sam > extracted_reads.bam &
 
-
-
-
+samtools index /DATA2/syh/output/m5-library-1/extracted_reads.bam
