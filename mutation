@@ -56,6 +56,13 @@ samtools index /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam
 #提取81-120bp区域
 nohup samtools view -h /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam sequence_name:81-120 > extracted_reads.sam &
 
+#########################################################
+#reads过长造成前端存在indel，先切再比对，得到没有冗余indel的bam
+
+
+
+
+
 nohup samtools view -Sb extracted_reads.sam > extracted_reads.bam &
 
 samtools index /DATA2/syh/output/m5-library-1/extracted_reads.bam
