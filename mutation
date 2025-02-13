@@ -56,13 +56,24 @@ samtools index /DATA2/syh/output/m5-library-1/m5-library-1_selected.bam
 #提取81-120bp区域
 nohup samtools view -h /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam sequence_name:81-120 > extracted_reads.sam &
 
-#########################################################
-#reads过长造成前端存在indel，先切再比对，得到没有冗余indel的bam
-
-
-
-
-
 nohup samtools view -Sb extracted_reads.sam > extracted_reads.bam &
 
 samtools index /DATA2/syh/output/m5-library-1/extracted_reads.bam
+#########################################################
+#reads过长造成前端存在indel，先切再比对，得到没有冗余indel的bam
+
+nohup java -jar /DATA2/syh/software/trim/Trimmomatic-0.39/trimmomatic-0.39.jar PE /DATA2/syh/rawdata/m5-library-1/m5-library-1_R1.fq.gz /DATA2/syh/rawdata/m5-library-1/m5-library-1_R2.fq.gz \
+m5-library-1_forward_paired.fq.gz m5-library-1_forward_unpaired.fq.gz m5-library-1_reverse_paired.fq.gz m5-library-1_reverse_unpaired.fq.gz \
+HEADCROP:30 &
+
+nohup bowtie2 -x /DATA2/syh/reference/mutation_index \
+        -1 /DATA2/syh/trim/li1/m5-library-1_forward_paired.fq.gz \
+        -2 /DATA2/syh/trim/li1/m5-library-1_reverse_paired.fq.gz \
+        -S /DATA2/syh/output/m5-library-12/m5-library-1_aligned.sam \
+        -p 16 &
+
+nohup samtools view -bS /DATA2/syh/output/m5-library-12/m5-library-1_aligned.sam > /DATA2/syh/output/m5-library-12/m5-library-1_aligned.bam &
+#排序
+nohup samtools sort /DATA2/syh/output/m5-library-12/m5-library-1_aligned.bam -o /DATA2/syh/output/m5-library-12/m5-library-1_sorted.bam &
+#索引
+nohup samtools index /DATA2/syh/output/m5-library-12/m5-library-1_sorted.bam &
