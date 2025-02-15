@@ -77,3 +77,7 @@ nohup samtools view -bS /DATA2/syh/output/m5-library-12/m5-library-1_aligned.sam
 nohup samtools sort /DATA2/syh/output/m5-library-12/m5-library-1_aligned.bam -o /DATA2/syh/output/m5-library-12/m5-library-1_sorted.bam &
 #索引
 nohup samtools index /DATA2/syh/output/m5-library-12/m5-library-1_sorted.bam &
+
+#运行R脚本
+nohup Rscript /DATA2/syh/r/mutation_in_server.R > analysis_output.log 2>&1 &
+
