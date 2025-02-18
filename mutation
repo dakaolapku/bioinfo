@@ -81,3 +81,33 @@ nohup samtools index /DATA2/syh/output/m5-library-12/m5-library-1_sorted.bam &
 #运行R脚本
 nohup Rscript /DATA2/syh/r/mutation_in_server.R > analysis_output.log 2>&1 &
 
+
+nohup java -jar /DATA2/syh/software/trim/Trimmomatic-0.39/trimmomatic-0.39.jar PE /DATA2/syh/rawdata/m5-library-2/m5-library-2_R1.fq.gz /DATA2/syh/rawdata/m5-library-2/m5-library-2_R2.fq.gz \
+m5-library-2_forward_paired.fq.gz m5-library-2_forward_unpaired.fq.gz m5-library-2_reverse_paired.fq.gz m5-library-2_reverse_unpaired.fq.gz \
+HEADCROP:30 &
+nohup java -jar /DATA2/syh/software/trim/Trimmomatic-0.39/trimmomatic-0.39.jar PE /DATA2/syh/rawdata/m5-library-3/m5-library-3_R1.fq.gz /DATA2/syh/rawdata/m5-library-3/m5-library-3_R2.fq.gz \
+m5-library-3_forward_paired.fq.gz m5-library-3_forward_unpaired.fq.gz m5-library-3_reverse_paired.fq.gz m5-library-3_reverse_unpaired.fq.gz \
+HEADCROP:30 &
+
+nohup bowtie2 -x /DATA2/syh/reference/mutation_index \
+        -1 /DATA2/syh/trim/li2/m5-library-2_forward_paired.fq.gz \
+        -2 /DATA2/syh/trim/li2/m5-library-2_reverse_paired.fq.gz \
+        -S /DATA2/syh/output/m5-library-2/m5-library-2_aligned.sam \
+        -p 8 &
+nohup bowtie2 -x /DATA2/syh/reference/mutation_index \
+        -1 /DATA2/syh/trim/li3/m5-library-3_forward_paired.fq.gz \
+        -2 /DATA2/syh/trim/li3/m5-library-3_reverse_paired.fq.gz \
+        -S /DATA2/syh/output/m5-library-3/m5-library-3_aligned.sam \
+        -p 8 &
+
+nohup samtools view -bS /DATA2/syh/output/m5-library-2/m5-library-2_aligned.sam > /DATA2/syh/output/m5-library-2/m5-library-2_aligned.bam &
+nohup samtools view -bS /DATA2/syh/output/m5-library-3/m5-library-3_aligned.sam > /DATA2/syh/output/m5-library-3/m5-library-3_aligned.bam &
+
+nohup samtools sort /DATA2/syh/output/m5-library-2/m5-library-2_aligned.bam -o /DATA2/syh/output/m5-library-2/m5-library-2_sorted.bam &
+nohup samtools sort /DATA2/syh/output/m5-library-3/m5-library-3_aligned.bam -o /DATA2/syh/output/m5-library-3/m5-library-3_sorted.bam &
+
+nohup samtools index /DATA2/syh/output/m5-library-2/m5-library-2_sorted.bam &
+nohup samtools index /DATA2/syh/output/m5-library-3/m5-library-3_sorted.bam &
+
+nohup Rscript /DATA2/syh/r/mutation_in_server2.R > analysis_output2.log 2>&1 &
+nohup Rscript /DATA2/syh/r/mutation_in_server3.R > analysis_output3.log 2>&1 &
