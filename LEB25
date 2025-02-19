@@ -1,0 +1,65 @@
+#网址
+#Linux基础
+https://www.runoob.com/linux/linux-tutorial.html
+https://linux.vbird.org/linux_basic/
+https://www.runoob.com/w3cnote/linux-command-full-fight.html
+https://www.runoob.com/w3cnote/all-vim-cheatsheat.html
+
+
+
+L1
+
+用以下命令显示上述两个文件，注意它们之间格式区别
+cat table.txt
+cat table.xls
+用以下命令显示table.txt，注意输出结果的变化
+cat table.txt -e
+cat table.txt -n
+cat table.txt -e -n
+用以下命令显示table.xls，注意输出结果的变化
+cat table.xls -t
+cat table.xls -A
+cat table.xls -Ab
+用以下命令显示cat命令用法手册
+man cat
+参数-e含义：显示行末$符号
+参数-n含义：显示行号
+参数-t含义：显示表格分隔符^I
+参数-A含义：显示表格分隔符^I和行末$符号
+
+head和tail命令
+用以下命令显示table.txt前3行
+head table.txt -n 3
+用以下命令显示table.txt后3行
+tail table.txt -n 3
+用以下命令将table.txt前3行保存到文件head3中
+head table.txt -n 3 >head3
+用以下命令将table.txt后3行保存到文件tail3中
+tail table.txt -n 3 >tail3
+用以下命令将head3和tail3合并成一个文件table1
+cat head3 tail3 >table1
+table1 内容如下，注意重复行
+Line 1 - First line, L1, A
+Line 2 - Second line, L2, B
+Line 3 - Third line, L3, C
+Line 3 - Third line, L3, C
+Line 4 - Fourth line, L4, D
+Line 5 - Fifth line, L5, E
+
+sort, shuf和uniq命令
+用以下命令将table1按字母顺序排序后输出结果
+sort table1
+用以下命令将table1按倒序输出结果
+sort table1 -r
+用以下命令将table1按字母顺序排序后输出结果，重复行只显示一次
+sort table1 -u
+参数-u含义：unique
+用以下命令将table1顺序打乱后输出结果，存放到table2中
+shuf table1 >table2
+Line 2 - Second line, L2, B
+Line 3 - Third line, L3, C
+Line 3 - Third line, L3, C
+Line 5 - Fifth line, L5, E
+Line 1 - First line, L1, A
+Line 4 - Fourth line, L4, D
+
