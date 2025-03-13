@@ -16,6 +16,8 @@ nohup bowtie2 -x /DATA2/syh/reference/mutation_index \
 nohup samtools view -bS /DATA2/syh/output/m5-library-1/m5-library-1_aligned.sam > /DATA2/syh/output/m5-library-1/m5-library-1_aligned.bam &
 #排序
 samtools sort /DATA2/syh/output/m5-library-1/m5-library-1_aligned.bam -o /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
+#去重
+nohup sambamba markdup -r -t 10 /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam /DATA2/syh/output/m5-library-1/m5-library-1_dedup.bam &
 #索引
 samtools index /DATA2/syh/output/m5-library-1/m5-library-1_sorted.bam
 #比对统计信息
