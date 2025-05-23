@@ -4,7 +4,7 @@ rawdata目录
 nohup sh RNA_Seq_pipeline.sh \
 -f /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R1.fq.gz \
 -r /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R2.fq.gz \
--a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA \
+-a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
 -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
 -p dC1-0h-1 \
 -o /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523 \
@@ -12,3 +12,19 @@ nohup sh RNA_Seq_pipeline.sh \
 
 
 
+sbatch submit1.sh
+
+
+ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/X101SC22033045-Z01-J285/01.RawData/C2C3*/*.fq.gz |sort| xargs -n 2 | parallel --dryrun -C " " \
+'/gpfs1/xiongji_pkuhpc/lbyybl/bashscript/bin/RNA-seq/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s/.*RawData\///g; s/\/.*//g =} -o result/{=1 s/.*RawData\///g; s/\/.*//g =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_C2C3.sh
+
+ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/C2C3*/*.fq.gz |sort| xargs -n 2 | parallel --dryrun -C " " \
+'/gpfs1/xiongji_pkuhpc/lbyybl/bashscript/bin/RNA-seq/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s/.*RawData\///g; s/\/.*//g =} -o result/{=1 s/.*RawData\///g; s/\/.*//g =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_C2C3.sh
+
+
+
+
+
+
+
+pkurun-cnlong 1 20 bash submit1.sh
