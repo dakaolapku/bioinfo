@@ -16,6 +16,6 @@ ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF20231000
 | parallel --dryrun -C " " \
 '/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s#.*/Rawdata/##; s#/.*## =} -o result/{=1 s#.*/Rawdata/##; s#/.*## =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_dC1.sh
 
-split -l 5 run_dC1.sh part_
+split -l 1 run_dC1.sh dC1_
 
 pkurun-cnlong 1 20 bash part_aa
