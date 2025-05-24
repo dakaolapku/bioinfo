@@ -1,30 +1,21 @@
 rawdata目录
 /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata
-
-nohup sh RNA_Seq_pipeline.sh \
--f /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R1.fq.gz \
--r /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R2.fq.gz \
--a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
--A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
--p dC1-0h-1 \
--o /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523 \
--x lustre1/xiongji_pkuhpc/genome/mm10 &
+工作目录
+/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
 
 
 
-sbatch submit1.sh
-
-
+示例：
 ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/X101SC22033045-Z01-J285/01.RawData/C2C3*/*.fq.gz |sort| xargs -n 2 | parallel --dryrun -C " " \
 '/gpfs1/xiongji_pkuhpc/lbyybl/bashscript/bin/RNA-seq/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s/.*RawData\///g; s/\/.*//g =} -o result/{=1 s/.*RawData\///g; s/\/.*//g =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_C2C3.sh
 
-ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/C2C3*/*.fq.gz |sort| xargs -n 2 | parallel --dryrun -C " " \
-'/gpfs1/xiongji_pkuhpc/lbyybl/bashscript/bin/RNA-seq/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s/.*RawData\///g; s/\/.*//g =} -o result/{=1 s/.*RawData\///g; s/\/.*//g =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_C2C3.sh
+20250524代码
+ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1*/*.fq.gz \
+| sort \
+| xargs -n 2 \
+| parallel --dryrun -C " " \
+'/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s#.*/Rawdata/##; s#/.*## =} -o result/{=1 s#.*/Rawdata/##; s#/.*## =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_dC1.sh
 
+split -l 5 run_dC1.sh part_
 
-
-
-
-
-
-pkurun-cnlong 1 20 bash submit1.sh
+pkurun-cnlong 1 20 bash part_aa
