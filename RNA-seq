@@ -3,9 +3,18 @@ rawdata目录
 工作目录
 /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
 
+传文件
+scp syh@162.105.250.68:/DATA/work/lbyybl/genomes/STAR_index/mm10_dm6/genomeParameters.txt .
 
 
-示例：
+STAR --runMode genomeGenerate --runThreadN 20 --genomeDir /home/xiongji_pkuhpc/gpfs1/syh/genome/star/mm10_dm6   --genomeFastaFiles /lustre1/xiongji_pkuhpc/genome/mm10_dm6_merge/mm10_dm6_merge.fa --sjdbGTFfile /lustre1/xiongji_pkuhpc/genome/annotations/gencode_mm10_vM23.gtf --sjdbOverhang 149
+
+
+
+
+
+
+脚本示例：
 ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/X101SC22033045-Z01-J285/01.RawData/C2C3*/*.fq.gz |sort| xargs -n 2 | parallel --dryrun -C " " \
 '/gpfs1/xiongji_pkuhpc/lbyybl/bashscript/bin/RNA-seq/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s/.*RawData\///g; s/\/.*//g =} -o result/{=1 s/.*RawData\///g; s/\/.*//g =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_C2C3.sh
 
@@ -18,4 +27,15 @@ ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF20231000
 
 split -l 1 run_dC1.sh dC1_
 
-pkurun-cnlong 1 20 bash part_aa
+pkurun-cnlong 1 20 bash dC1_aa
+for job in dC1_a{a..j}; do
+    pkurun-cnlong 1 20 bash $job
+done
+
+
+nohup STAR --genomeDir /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6 --readFilesIn /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt/dC1-0h-1_1.fq.gz /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt/dC1-0h-1_2.fq.gz --readFilesCommand zcat --outFileNamePrefix /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/test --outSAMtype BAM SortedByCoordinate --quantMode TranscriptomeSAM GeneCounts --peOverlapNbasesMin 20 --twopassMode Basic --outFilterMultimapNmax 3 --runThreadN 20 &
+
+
+/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
+/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt
+
