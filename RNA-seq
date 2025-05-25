@@ -10,7 +10,7 @@ scp syh@162.105.250.68:/DATA/work/lbyybl/genomes/STAR_index/mm10_dm6/genomeParam
 STAR --runMode genomeGenerate --runThreadN 20 --genomeDir /home/xiongji_pkuhpc/gpfs1/syh/genome/star/mm10_dm6   --genomeFastaFiles /lustre1/xiongji_pkuhpc/genome/mm10_dm6_merge/mm10_dm6_merge.fa --sjdbGTFfile /lustre1/xiongji_pkuhpc/genome/annotations/gencode_mm10_vM23.gtf --sjdbOverhang 149
 
 
-
+zcat /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R1.fq.gz | wc -l
 
 
 
