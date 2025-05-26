@@ -4,15 +4,14 @@ rawdata目录
 工作目录
 /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
 
-传文件
+传文件，从服务器到集群
 scp syh@162.105.250.68:/DATA/work/lbyybl/genomes/STAR_index/mm10_dm6/genomeParameters.txt .
 
-
+构建索引
 STAR --runMode genomeGenerate --runThreadN 20 --genomeDir /home/xiongji_pkuhpc/gpfs1/syh/genome/star/mm10_dm6   --genomeFastaFiles /lustre1/xiongji_pkuhpc/genome/mm10_dm6_merge/mm10_dm6_merge.fa --sjdbGTFfile /lustre1/xiongji_pkuhpc/genome/annotations/gencode_mm10_vM23.gtf --sjdbOverhang 149
 
-
+查看reads数
 zcat /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata/dC1-0h-1/dC1-0h-1_R1.fq.gz | wc -l
-
 
 
 脚本示例：
@@ -26,6 +25,7 @@ ls /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF20231000
 | parallel --dryrun -C " " \
 '/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/RNA_Seq_pipeline.sh -f {1} -r {2} -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -p {=1 s#.*/Rawdata/##; s#/.*## =} -o result/{=1 s#.*/Rawdata/##; s#/.*## =} -m 20 -x /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6' > run_dC1.sh
 
+拆成10个任务
 split -l 1 run_dC1.sh dC1_
 
 pkurun-cnlong 1 20 bash dC1_aa
@@ -33,10 +33,19 @@ for job in dC1_a{a..j}; do
     pkurun-cnlong 1 20 bash $job
 done
 
-
+测试
 nohup STAR --genomeDir /gpfs1/xiongji_pkuhpc/qqxu/data/index/star/mm10dm6 --readFilesIn /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt/dC1-0h-1_1.fq.gz /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt/dC1-0h-1_2.fq.gz --readFilesCommand zcat --outFileNamePrefix /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/test --outSAMtype BAM SortedByCoordinate --quantMode TranscriptomeSAM GeneCounts --peOverlapNbasesMin 20 --twopassMode Basic --outFilterMultimapNmax 3 --runThreadN 20 &
 
+从bam到表达矩阵 用旧数据
+nohup featureCounts -p -B -C -a /lustre1/xiongji_pkuhpc/genome/annotations/gencode_mm10_vM23.gtf -T 20 -o counts250523.txt \
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-0h-1/mapping/dC1-0h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-0h-2/mapping/dC1-0h-2_rmdup.bam \
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-12h-1/mapping/dC1-12h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-12h-2/mapping/dC1-12h-2_rmdup.bam \
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-24h-1/mapping/dC1-24h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-24h-2/mapping/dC1-24h-2_rmdup.bam \
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-36h-1/mapping/dC1-36h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-36h-2/mapping/dC1-36h-2_rmdup.bam \
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-48h-1/mapping/dC1-48h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-48h-2/mapping/dC1-48h-2_rmdup.bam &
 
-/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
-/home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523/result/dC1-0h-1/cutadapt
+传文件，从集群到服务器
+rsync -arzvP counts250523.txt.summary syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq/250523
+/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/C1D_timecross_RNAseq_count.txt
+rsync -arzvP /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/fly_num_rep.txt syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq/250523
 
