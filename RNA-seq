@@ -1,11 +1,9 @@
-rawdata目录
+集群上的rawdata目录
 /gpfs1/xiongji_pkuhpc/qqxu/rawdata/PM-XS01KF2023100032-06/ANNO_XS01KF2023100032_PM-XS01KF2023100032-06_2024-03-22_18-39-38_223CWKLT4/Rawdata
 /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513
 工作目录
 /home/xiongji_pkuhpc/gpfs1/syh/ctdp1/rna-seq250523
 
-传文件，从服务器到集群
-scp syh@162.105.250.68:/DATA/work/lbyybl/genomes/STAR_index/mm10_dm6/genomeParameters.txt .
 
 构建索引
 STAR --runMode genomeGenerate --runThreadN 20 --genomeDir /home/xiongji_pkuhpc/gpfs1/syh/genome/star/mm10_dm6   --genomeFastaFiles /lustre1/xiongji_pkuhpc/genome/mm10_dm6_merge/mm10_dm6_merge.fa --sjdbGTFfile /lustre1/xiongji_pkuhpc/genome/annotations/gencode_mm10_vM23.gtf --sjdbOverhang 149
@@ -44,10 +42,10 @@ nohup featureCounts -p -B -C -a /lustre1/xiongji_pkuhpc/genome/annotations/genco
 /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-36h-1/mapping/dC1-36h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-36h-2/mapping/dC1-36h-2_rmdup.bam \
 /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-48h-1/mapping/dC1-48h-1_rmdup.bam /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/result/dC1-48h-2/mapping/dC1-48h-2_rmdup.bam &
 
+传文件，从服务器到集群
+scp syh@162.105.250.68:/DATA/work/lbyybl/genomes/STAR_index/mm10_dm6/genomeParameters.txt .
 传文件，从集群到服务器
 rsync -arzvP counts250523.txt.summary syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq/250523
-/gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/C1D_timecross_RNAseq_count.txt
-rsync -arzvP /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/fly_num_rep.txt syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq/250523
 
 
 
@@ -63,11 +61,14 @@ samtools view -H file.bam | grep '^@SQ' | head
 
 
 
-
-
-
-
-
+nohup rmats.py \
+  --b1 0h.txt \
+  --b2 12h.txt \
+  --gtf /WORK/qqxu/data/annotation/gencodemm10/gencode.vM25.annotation.gtf \
+  --od /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/output_0_12 \
+  --tmp /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/tmp_0_12 \
+  --readLength 150 \
+  --nthread 10 &
 
 
 
