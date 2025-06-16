@@ -49,3 +49,26 @@ rsync -arzvP counts250523.txt.summary syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq
 /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/C1D_timecross_RNAseq_count.txt
 rsync -arzvP /gpfs1/xiongji_pkuhpc/qqxu/rna-seq/rpb7/sample20240513/fly_num_rep.txt syh@162.105.250.68:/DATA2/syh/ctdp1/rnaseq/250523
 
+
+
+看splicing
+#查看是否排序过
+samtools view -H file.bam | grep SO:
+SO:coordinate即为按基因组坐标排序的
+
+#查看参考基因组版本
+samtools view -H file.bam | grep '^@SQ' | head
+染色体名是 1, 2, 3, 是 Ensembl 风格（GRCh38 / GRCm39）
+染色体名是 chr1, chr2, chrX 是 GENCODE / UCSC 风格（hg38 / mm10）
+
+
+
+
+
+
+
+
+
+
+
+
