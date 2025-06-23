@@ -60,7 +60,7 @@ samtools view -H file.bam | grep '^@SQ' | head
 染色体名是 chr1, chr2, chrX 是 GENCODE / UCSC 风格（hg38 / mm10）
 
 
-
+#rmats分析
 nohup rmats.py \
   --b1 0h.txt \
   --b2 12h.txt \
@@ -69,6 +69,40 @@ nohup rmats.py \
   --tmp /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/tmp_0_12 \
   --readLength 150 \
   --nthread 10 &
+
+#rmats特定基因可视化
+#筛选特定的基因，方法是直接在rmats输出的txt里抽取对应ID的行
+awk 'NR==1 || $1==5079' SE.MATS.JC.txt > SE.ID5079.MATS.JC.txt
+
+nohup python /DATA2/syh/software/rmats/rmats2sashimiplot-master/src/rmats2sashimiplot/rmats2sashimiplot.py \
+  --b1 /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/0h.txt \
+  --b2 /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/48h.txt \
+  --event-type SE \
+  -e SE.ID5079.MATS.JC.txt \
+  -o /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats2sashimi/se48/Mettl22 \
+  --l1 0h \
+  --l2 48h \
+  > nohup.out 2>&1 &
+
+
+awk 'NR==1 || $1==3149' RI.MATS.JC.txt > RI.ID3149.MATS.JC.txt
+
+nohup python /DATA2/syh/software/rmats/rmats2sashimiplot-master/src/rmats2sashimiplot/rmats2sashimiplot.py \
+  --b1 /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/0h.txt \
+  --b2 /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/48h.txt \
+  --event-type RI \
+  -e RI.ID3149.MATS.JC.txt \
+  -o /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats2sashimi/ri48/Mau2 \
+  --l1 0h \
+  --l2 48h \
+  > nohup.out 2>&1 &
+
+
+
+
+
+
+
 
 
 
