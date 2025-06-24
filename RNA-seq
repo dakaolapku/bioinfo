@@ -57,10 +57,13 @@ SO:coordinate即为按基因组坐标排序的
 #查看参考基因组版本
 samtools view -H file.bam | grep '^@SQ' | head
 染色体名是 1, 2, 3, 是 Ensembl 风格（GRCh38 / GRCm39）
-染色体名是 chr1, chr2, chrX 是 GENCODE / UCSC 风格（hg38 / mm10）
+染色体名是 chr1, chr2, chrX 是 GENCODE / UCSC 风格（hg38 / mm10），这里用mm10
 
 
 #rmats分析
+#必须用不去重的 The BAM files should be generated from RNA-Seq reads aligned to the genome with a spliced aligner, and should not be duplicate-removed.
+#必须用排序的bam
+
 nohup rmats.py \
   --b1 0h.txt \
   --b2 12h.txt \
