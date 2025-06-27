@@ -63,6 +63,7 @@ samtools view -H file.bam | grep '^@SQ' | head
 #rmats分析
 #必须用不去重的 The BAM files should be generated from RNA-Seq reads aligned to the genome with a spliced aligner, and should not be duplicate-removed.
 #必须用排序的bam
+#这里的计算结果是b1-b2，所以b2放对照更好
 
 nohup rmats.py \
   --b1 0h.txt \
@@ -100,6 +101,15 @@ nohup python /DATA2/syh/software/rmats/rmats2sashimiplot-master/src/rmats2sashim
   --l2 48h \
   > nohup.out 2>&1 &
 
+#做motif分析，适配rMAPS2，生成一个反过来的 
+nohup rmats.py \
+  --b1 48h.txt \
+  --b2 0h.txt \
+  --gtf /WORK/qqxu/data/annotation/gencodemm10/gencode.vM25.annotation.gtf \
+  --od /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/output_0_48/rev1_2/ \
+  --tmp /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/output_0_48/tem_rev/ \
+  --readLength 150 \
+  --nthread 10 &
 
 
 
