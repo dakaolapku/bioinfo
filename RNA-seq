@@ -77,7 +77,7 @@ nohup rmats.py \
   --readLength 150 \
   --nthread 10 &
 
-#rmats特定基因可视化
+#rmats特定基因可视化rmats2sashimiplot
 #筛选特定的基因，方法是直接在rmats输出的txt里抽取对应ID的行
 awk 'NR==1 || $1==5079' SE.MATS.JC.txt > SE.ID5079.MATS.JC.txt
 
@@ -113,6 +113,25 @@ nohup rmats.py \
   --tmp /DATA2/syh/ctdp1/rnaseq/250614_splicing/rmats/output_0_48/tem_rev/ \
   --readLength 150 \
   --nthread 10 &
+
+#rMAPS2
+plot_map \
+  --event        se \
+  --annotations  cluster1_SE.JunctionCountOnly.txt SE.background.JunctionCountOnly.txt \
+  --annotation_type rmats rmats \
+  --exon_offset  50 \
+  --intron_offset 300 \
+  --confidence   0.95 \
+  --normalization_level 1 \
+  --testnums     0 1 \
+  --bgnum        1 \
+  --sigtest      permutation \
+  --output       cluster1_vs_bg_SE_motif.svg
+
+
+
+
+
 
 
 
